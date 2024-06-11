@@ -1,124 +1,134 @@
-#include <iostream>
+﻿#include <iostream>
+#include <cmath>
 #include <Windows.h>
 #include "glut.h"
 
-#define pi 3.14f
+#define pi 3.14159265358979323846
+
+GLUquadric* cilindru;
+float cameraAngle = 0.0f;
+float cameraRadius = 20.0f;
+const float cameraHeight = 5.0f;
+const float cameraSpeed = 0.1f;
+const float radiusSpeed = 0.5f;
+double cameraX = 0.0;
+
+void myinit() {
+    cilindru = gluNewQuadric();
+    gluQuadricDrawStyle(cilindru, GLU_LINE);
+    gluQuadricNormals(cilindru, GLU_SMOOTH);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glEnable(GL_DEPTH_TEST);
+}
 
 void procesareTastatura(unsigned char key, int x, int y) {
-	std::cout << "tasta " << key << std::endl;
-	switch (key)
-	{
-	case 27:
-		exit(0);
-		break;
-	case 115:
-		//s
-		break;
-	case 119:
-		//w
-		break;
-	case 97:
-		//a
-		break;
-	case 100:
-		//d
-		break;
-	default:
-		break;
-	}
+    std::cout << "tasta " << key << std::endl;
+    switch (key)
+    {
+    case 27:
+        exit(0);
+        break;
+    case 's':
+        //s
+        break;
+    case 'w':
+        //w
+        break;
+    case 'a':
+        //pentru mutare camera catre stanga pe X
+        cameraX -= 0.0;
+        break;
+    case 'd':
+        //pentru mutare camera catre dreapta pe X
+        cameraX += 0.0;
+        break;
+    default:
+        break;
+    }
 }
 
 void procesareTastaturaSpecial(int key, int x, int y) {
-	std::cout << "tasta " << key << std::endl;
-	switch (key)
-	{
-	case 100:
-		//sag stanga
-		x -= 0.1f;
-		break;
-	case 101:
-		//sag sus
-		break;
-	case 102:
-		x += 0.1f;
-		//sag dreapta
-		break;
-	case 103:
-		//sag jos
-		break;
-	default:
-		break;
-	}
+    std::cout << "tasta " << key << std::endl;
+    switch (key)
+    {
+    case GLUT_KEY_LEFT:
+        cameraAngle -= cameraSpeed;
+        if (cameraAngle < 0) {
+            cameraAngle += 2 * pi;
+        }
+        break;
+    case GLUT_KEY_RIGHT:
+        cameraAngle += cameraSpeed;
+        if (cameraAngle > 2 * pi) {
+            cameraAngle -= 2 * pi;
+        }
+        break;
+    case GLUT_KEY_UP:
+        cameraRadius -= radiusSpeed;
+        if (cameraRadius < 1.0f) {
+            cameraRadius = 1.0f;
+        }
+        break;
+    case GLUT_KEY_DOWN:
+        cameraRadius += radiusSpeed;
+        break;
+    default:
+        break;
+    }
+    glutPostRedisplay();
 }
 
 void changeSize(int w, int h) {
+    if (h == 0)
+        h = 1;
 
-	// Prevent a divide by zero, when window is too short
-	// (you cant make a window of zero width).
-	if (h == 0)
-		h = 1;
+    float ratio = w * 1.0f / h;
 
-	float ratio = w * 1.0 / h;
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
 
-	// Use the Projection Matrix
-	glMatrixMode(GL_PROJECTION);
+    glViewport(0, 0, w, h);
+    gluPerspective(45.0f, ratio, 0.1f, 100.0f);
 
-	// Reset Matrix
-	glLoadIdentity();
-
-	// Set the viewport to be the entire window
-	glViewport(0, 0, w, h);
-
-	// Set the correct perspective.
-	gluPerspective(45.0f, ratio, 0.1f, 100.0f);
-
-	// Get Back to the Modelview
-	glMatrixMode(GL_MODELVIEW);
+    glMatrixMode(GL_MODELVIEW);
 }
 
-GLUquadricObj* q;
-
 void renderScene(void) {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
 
-	// Clear Color and Depth Buffers
+    // Calculează poziția camerei folosind trigonometrie
+    float cameraX = cameraRadius * cos(cameraAngle);
+    float cameraZ = cameraRadius * sin(cameraAngle);
+    gluLookAt(cameraX, cameraHeight, cameraZ, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // Desenează cilindrul
+    gluCylinder(cilindru, 1.0, 1.0, 3.0, 6, 1);
 
-	// Reset transformations
-	glLoadIdentity();
-	// Set the camera
-	//primi parametri pozitia camerei, urmatorii matricea de vizualizare, urmatorii nu am inteles
-	gluLookAt(0.0f, 0.0f, 2.0f, 0.0f, 0.0f, -2.0f, 0.0f, 1.0f, 0.0f);
-
-	glColor3f(1.0f, 0.0f, 0.0f);
-
-	gluSphere(q, 1.0f, 10, 20);
-
-	glutSwapBuffers();
+    glutSwapBuffers();
 }
 
 int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+    glutInitWindowPosition(100, 100);
+    glutInitWindowSize(800, 600);
+    glutCreateWindow("Masinute pe sosea");
 
-	// init GLUT and create window
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-	glutInitWindowPosition(100, 100);
-	glutInitWindowSize(320, 320);
-	glutCreateWindow("Masinute pe sosea");
+    myinit();
 
-	// register callbacks
-	glutDisplayFunc(renderScene);
-	glutReshapeFunc(changeSize);
-	glutIdleFunc(renderScene);
+    glutDisplayFunc(renderScene);
+    glutReshapeFunc(changeSize);
+    glutIdleFunc(renderScene);
 
-	//tastatura
-	glutKeyboardFunc(procesareTastatura);
-	glutSpecialFunc(procesareTastaturaSpecial);
+    //tastatura
+    glutKeyboardFunc(procesareTastatura);
+    glutSpecialFunc(procesareTastaturaSpecial);
 
-	//depth test
-	glEnable(GL_DEPTH_TEST);
-	// enter GLUT event processing cycle
-	glutMainLoop();
+    //depth test
+    glEnable(GL_DEPTH_TEST);
 
-	return 1;
+    glutMainLoop();
+
+    return 0;
 }
