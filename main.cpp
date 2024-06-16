@@ -14,6 +14,7 @@ void animatieMasina(int value) {
         
     }
     std::cout << "called";
+    //comentariu
 }
 
 void roata(double x, double y, double z) {
