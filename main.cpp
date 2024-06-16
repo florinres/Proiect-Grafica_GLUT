@@ -2,10 +2,6 @@
 #include <cmath>
 #include <Windows.h>
 #include "glut.h"
-#include <iostream>
-#include <cmath>
-#include <Windows.h>
-#include "glut.h"
 
 double angleHorizontal = 0.0; 
 double departareVerticala = 0.0;    
