@@ -8,12 +8,27 @@ double departareVerticala = 0.0;
 double radius = 10.0;          
 double departareZ = 5.0;
 
+void lumina() {
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
+    glEnable(GL_COLOR_MATERIAL);
+    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+
+    GLfloat ambient[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat position[] = { 0.0, 3.0, 0.0, 1.0 };
+
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+    glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+}
+
 void asfalt() {
 
-
-
-
-    GLUquadric* quad = gluNewQuadric(); // Crează o nouă cvadratică
+    GLUquadric* quad = gluNewQuadric(); 
 
     // Setează proprietățile cvadraticei
     gluQuadricDrawStyle(quad, GLU_FILL);
@@ -243,7 +258,7 @@ void display() {
         0.0, 0.0, 0.0,   // Punctul la care privește
         0.0, 1.0, 0.0);  // Vectorul de sus
 
-
+    lumina();
     glTranslated(-2.0, 0.1, 0.0);
     masina();
     //glPushMatrix();
