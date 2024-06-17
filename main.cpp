@@ -8,6 +8,41 @@ double departareVerticala = 0.0;
 double radius = 10.0;          
 double departareZ = 5.0;
 
+void asfalt() {
+
+
+
+
+    GLUquadric* quad = gluNewQuadric(); // Crează o nouă cvadratică
+
+    // Setează proprietățile cvadraticei
+    gluQuadricDrawStyle(quad, GLU_FILL);
+
+    GLfloat mat_ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+    GLfloat mat_diffuse[] = { 0.3f, 0.3f, 0.3f, 1.0f };
+    GLfloat mat_specular[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+    GLfloat mat_shininess[] = { 5.0f };
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+
+    glColor3f(0.3f, 0.3f, 0.3f); // Setează culoarea pentru asfalt
+
+    // Folosim GL_QUADS pentru a desena un dreptunghi de asfalt
+    glBegin(GL_QUADS);
+    {
+        glVertex3f(-5.0f, 0.0f, -10.0f);
+        glVertex3f(5.0f, 0.0f, -10.0f);
+        glVertex3f(5.0f, 0.0f, 10.0f);
+        glVertex3f(-5.0f, 0.0f, 10.0f);
+    }
+    glEnd();
+
+    gluDeleteQuadric(quad); // Șterge cvadratica după utilizare
+}
+
 void animatieMasina(int value) {
     while (--value)
     {
@@ -208,6 +243,7 @@ void display() {
         0.0, 0.0, 0.0,   // Punctul la care privește
         0.0, 1.0, 0.0);  // Vectorul de sus
 
+
     glTranslated(-2.0, 0.1, 0.0);
     masina();
     //glPushMatrix();
@@ -215,6 +251,8 @@ void display() {
     glTranslatef(2.0, 0.1, 0.0);
     masina();
     //glPopMatrix();
+    glTranslatef(-0.7, -0.4,0.0);
+    asfalt();
 
     glutSwapBuffers();
 }

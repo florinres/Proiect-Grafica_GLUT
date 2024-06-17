@@ -81,7 +81,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\rares\Desktop\proiect\libs</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\rares\Desktop\proiect\Proiect-Grafica_GLUT\libs</AdditionalLibraryDirectories>
       <AdditionalDependencies>glut32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
