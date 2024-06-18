@@ -2,11 +2,37 @@
 #include <cmath>
 #include <Windows.h>
 #include "glut.h"
+#include "GLAux.h"
 
 double angleHorizontal = 0.0; 
 double departareVerticala = 0.0;    
 double radius = 10.0;          
 double departareZ = 5.0;
+
+GLuint incarcaTextura(const char* s)
+{
+
+    GLuint textureId = 0;
+    AUX_RGBImageRec* pImagineTextura = auxDIBImageLoad("");
+
+    if (pImagineTextura != NULL)
+    {
+        glGenTextures(1, &textureId);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, 3, pImagineTextura->sizeX, pImagineTextura->sizeY,
+            0, GL_RGB, GL_UNSIGNED_BYTE, pImagineTextura->data);
+    }
+    if (pImagineTextura)
+    {
+        if (pImagineTextura->data) {
+            free(pImagineTextura->data);
+        }
+        free(pImagineTextura);
+    }
+    return textureId;
+}
 
 void lumina() {
 
