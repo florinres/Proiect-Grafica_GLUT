@@ -12,7 +12,101 @@ double angleHorizontal = 0.0;
 double departareVerticala = 0.0;
 double radius = 10.0;
 double departareZ = 5.0;
+double carPositionOne = -12.0;
+double carPositionTwo = -12.0;
 GLuint textureID = 0, textureID1 = 0, textureID2 = 0;
+struct Nume
+{
+    GLubyte litera_R[24] = {
+    0xF0, 0x00,
+    0xF8, 0x00,
+    0xD8, 0x00,
+    0xD8, 0x00,
+    0xF8, 0x00,
+    0xF0, 0x00,
+    0xD8, 0x00,
+    0xD8, 0x00,
+    0xD8, 0x00,
+    0xD8, 0x00,
+    0xD8, 0x00,
+    0xD8, 0x00
+    };
+
+    GLubyte litera_A[24] = {
+        0x30, 0x00,
+        0x78, 0x00,
+        0xCC, 0x00,
+        0xCC, 0x00,
+        0xCC, 0x00,
+        0xFC, 0x00,
+        0xFC, 0x00,
+        0xCC, 0x00,
+        0xCC, 0x00,
+        0xCC, 0x00,
+        0xCC, 0x00,
+        0xCC, 0x00
+    };
+
+    GLubyte litera_E[24] = {
+        0xFC, 0x00,
+        0xFC, 0x00,
+        0xC0, 0x00,
+        0xC0, 0x00,
+        0xC0, 0x00,
+        0xFC, 0x00,
+        0xFC, 0x00,
+        0xC0, 0x00,
+        0xC0, 0x00,
+        0xC0, 0x00,
+        0xFC, 0x00,
+        0xFC, 0x00
+    };
+
+    GLubyte litera_S[24] = {
+        0x7C, 0x00,
+        0xFC, 0x00,
+        0xC0, 0x00,
+        0xC0, 0x00,
+        0xF8, 0x00,
+        0x7C, 0x00,
+        0x3C, 0x00,
+        0x0C, 0x00,
+        0x0C, 0x00,
+        0x0C, 0x00,
+        0xFC, 0x00,
+        0xF8, 0x00
+    };
+};
+Nume Rares;
+
+void myName() {
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glColor3f(0.0, 0.0, 0.0);
+
+    // pozitia curenta pentru primul bitmap data in unitati logice (sunt 10 unitati pe axa x în intervalul(-5, 5))
+    glRasterPos2i(-2.0, 0.0);
+    glBitmap(10, 12, 0.0, 0.0, 20.0, 0.0, litera_E); // deplasarea este data în pixeli; 20 de pixeli pe axa x
+    glBitmap(10, 12, 0.0, 0.0, 20.0, 0.0, litera_E);
+    glBitmap(10, 12, 0.0, 0.0, 20.0, 0.0, litera_E);
+    glBitmap(10, 12, 0.0, 0.0, 20.0, 0.0, litera_E);
+
+    glFlush();
+}
+
+void animatie() {
+    if (carPositionOne >= 12.0)
+    {
+        carPositionOne = -12.0;
+    }
+    if (carPositionTwo >= 12.0)
+    {
+        carPositionTwo = -8.0;
+    }
+
+    carPositionOne += 0.1;//stanga
+    carPositionTwo += 0.1;
+    glutPostRedisplay();
+}
 
 GLuint loadTexture(const char* filename, GLuint id) {
     int width, height, numComponents;
@@ -26,20 +120,17 @@ GLuint loadTexture(const char* filename, GLuint id) {
     glBindTexture(GL_TEXTURE_2D, id);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 
-    // Setează parametrii de filtrare și de wrap pentru textura OpenGL
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    // Eliberează memoria alocată de stb_image după încărcare
     stbi_image_free(data);
 
     return id;
 }
 
 
-// Function to create and display textured terrain
 void teren() {
     GLUquadric* teren = gluNewQuadric();
     gluQuadricTexture(teren, GL_TRUE);
@@ -48,17 +139,15 @@ void teren() {
     glBindTexture(GL_TEXTURE_2D, textureID);
 
     glPushMatrix();
-    // Traslarea discului mai jos pe planul Y pentru a fi sub asfalt
-    glTranslatef(-2.0f, -0.3f, 0.0f); // Ajustează valoarea "0.1" în funcție de necesitate
+    
+    glTranslatef(1.1f, -0.3f, 0.0f);
 
     gluQuadricDrawStyle(teren, GLU_FILL);
     gluQuadricNormals(teren, GLU_SMOOTH);
 
-    // Rotirea discului pentru a fi pe planul XY (paralel cu planul de vizualizare)
-    glRotatef(-90, 1, 0, 0);  // Rotire de -90 grade în jurul axei X
+    glRotatef(-90, 1, 0, 0); 
 
-    // Mărim raza exterioară a discului pentru a face terenul mai mare
-    gluDisk(teren, 0.0, 10.0, 128, 128); // Mărime mai mare pentru teren
+    gluDisk(teren, 0.0, 10.0, 256, 256); 
 
     glPopMatrix();
 
@@ -66,9 +155,6 @@ void teren() {
     glDisable(GL_TEXTURE_2D);
 }
 
-
-
-// Function to setup lighting
 void lumina() {
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
@@ -85,7 +171,6 @@ void lumina() {
     glLightfv(GL_LIGHT0, GL_POSITION, position);
 }
 
-// Function to create and display a textured asphalt rectangle
 void asfalt() {
     GLUquadric* quad = gluNewQuadric();
     gluQuadricDrawStyle(quad, GLU_FILL);
@@ -114,7 +199,6 @@ void asfalt() {
     gluDeleteQuadric(quad);
 }
 
-// Function to create and display a wheel
 void roata(double x, double y, double z) {
     glPushMatrix();
     glTranslated(x, y, z);
@@ -124,8 +208,6 @@ void roata(double x, double y, double z) {
     glPopMatrix();
 }
 
-
-// Function to create and display a car
 void masina() {
     glColor3d(1.0, 0.0, 0.0);
     glBegin(GL_QUADS);
@@ -239,8 +321,6 @@ void masina() {
     roata(3.1, 0.1, -2.50);
 }
 
-
-// Keyboard input handling
 void Taste(unsigned char key, int x, int y) {
     std::cout << "tasta " << key << std::endl;
     switch (key) {
@@ -255,7 +335,7 @@ void Taste(unsigned char key, int x, int y) {
     glutPostRedisplay();
 }
 
-// Special keyboard input handling
+
 void TasteSpeciale(int key, int x, int y) {
     std::cout << "tasta " << key << std::endl;
     switch (key) {
@@ -272,14 +352,14 @@ void TasteSpeciale(int key, int x, int y) {
     glutPostRedisplay();
 }
 
-// Initialization
 void init() {
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    textureID = loadTexture("iarba.bmp", textureID);
+    textureID = loadTexture("iarba2.bmp", textureID);
+    
 }
 
-// Reshape function
+
 void reshape(GLsizei w, GLsizei h) {
     if (h == 0) return;
 
@@ -290,28 +370,42 @@ void reshape(GLsizei w, GLsizei h) {
     glMatrixMode(GL_MODELVIEW);
 }
 
-// Display function
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    double cameraX = radius * cos(departareVerticala) * sin(angleHorizontal);
+    /*double cameraX = radius * cos(departareVerticala) * sin(angleHorizontal);
     double cameraY = radius * sin(departareVerticala);
     double cameraZ = radius * cos(departareVerticala) * cos(angleHorizontal);
 
     gluLookAt(cameraX, cameraY, cameraZ - departareZ,
         0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0);
+        0.0, 1.0, 0.0);*/
+
+    gluLookAt(0.0,5.0,-30.0,
+        0.0,1.0,0.0,
+        0,1,0);
 
     teren();
     lumina();
-    glTranslated(-2.0, 0.1, 0.0);
+
+    glPushMatrix();
+    glTranslated(2.0, 0.1, carPositionOne);
     masina();
+    glPopMatrix();
+
+    glPushMatrix();
     glRotated(180, 0, 1, 0);
-    glTranslatef(2.0, 0.1, 0.0);
+    glTranslatef(-1.0, 0.1, carPositionTwo);
     masina();
-    glTranslatef(-0.7, -0.4, 0.0);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(1.4, -0.2, 0.0);
     asfalt();
+    glPopMatrix();
+
+    myName();
 
     glutSwapBuffers();
 }
@@ -329,7 +423,7 @@ int main(int argc, char** argv) {
     glutDisplayFunc(display);
     glutSpecialFunc(TasteSpeciale);
     glutKeyboardFunc(Taste);
-  /*  glutTimerFunc(100, animatieMasina, 1);*/
+    glutIdleFunc(animatie);
 
     glutMainLoop();
 
