@@ -15,21 +15,21 @@ double departareZ = 5.0;
 double carPositionOne = -12.0;
 double carPositionTwo = -12.0;
 GLuint textureID = 0, textureID1 = 0, textureID2 = 0;
-struct Nume
-{
+
+struct Nume {
     GLubyte litera_R[24] = {
-    0xF0, 0x00,
-    0xF8, 0x00,
-    0xD8, 0x00,
-    0xD8, 0x00,
-    0xF8, 0x00,
-    0xF0, 0x00,
-    0xD8, 0x00,
-    0xD8, 0x00,
-    0xD8, 0x00,
-    0xD8, 0x00,
-    0xD8, 0x00,
-    0xD8, 0x00
+        0xF0, 0x00,
+        0xF8, 0x00,
+        0xD8, 0x00,
+        0xD8, 0x00,
+        0xF8, 0x00,
+        0xF0, 0x00,
+        0xD8, 0x00,
+        0xD8, 0x00,
+        0xD8, 0x00,
+        0xD8, 0x00,
+        0xD8, 0x00,
+        0xD8, 0x00
     };
 
     GLubyte litera_A[24] = {
@@ -77,21 +77,25 @@ struct Nume
         0xF8, 0x00
     };
 };
+
 Nume Rares;
 
-void myName() {
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glColor3f(0.0, 0.0, 0.0);
-
-    // pozitia curenta pentru primul bitmap data in unitati logice (sunt 10 unitati pe axa x în intervalul(-5, 5))
-    glRasterPos2i(-2.0, 0.0);
-    glBitmap(10, 12, 0.0, 0.0, 20.0, 0.0, litera_E); // deplasarea este data în pixeli; 20 de pixeli pe axa x
-    glBitmap(10, 12, 0.0, 0.0, 20.0, 0.0, litera_E);
-    glBitmap(10, 12, 0.0, 0.0, 20.0, 0.0, litera_E);
-    glBitmap(10, 12, 0.0, 0.0, 20.0, 0.0, litera_E);
-
-    glFlush();
+void drawText(const char* text, float x, float y, void* font) {
+    glRasterPos3d(x, y,-10);
+    for (const char* c = text; *c != '\0'; c++) {
+        glutBitmapCharacter(font, *c);
+    }
 }
+
+void myName() {
+    glColor3f(1.0, 1.0, 1.0);
+
+    const char* name = "BOLCA RARES";
+    float x = 11.0f; 
+    float y = -6.f;
+    drawText(name, x, y, GLUT_BITMAP_TIMES_ROMAN_24);
+}
+
 
 void animatie() {
     if (carPositionOne >= 12.0)
@@ -103,7 +107,7 @@ void animatie() {
         carPositionTwo = -8.0;
     }
 
-    carPositionOne += 0.1;//stanga
+    carPositionOne += 0.1;
     carPositionTwo += 0.1;
     glutPostRedisplay();
 }
@@ -354,9 +358,8 @@ void TasteSpeciale(int key, int x, int y) {
 
 void init() {
     glEnable(GL_DEPTH_TEST);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearColor(0.0f, 0.2f, 1.0f, 0.0f);
     textureID = loadTexture("iarba2.bmp", textureID);
-    
 }
 
 
@@ -381,7 +384,7 @@ void display() {
     gluLookAt(cameraX, cameraY, cameraZ - departareZ,
         0.0, 0.0, 0.0,
         0.0, 1.0, 0.0);*/
-
+    
     gluLookAt(0.0,5.0,-30.0,
         0.0,1.0,0.0,
         0,1,0);
