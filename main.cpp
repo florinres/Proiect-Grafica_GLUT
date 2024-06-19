@@ -15,6 +15,7 @@ double departareZ = 5.0;
 double carPositionOne = -12.0;
 double carPositionTwo = -12.0;
 GLuint textureID = 0, textureID1 = 0, textureID2 = 0;
+GLfloat angle = 0.0f;
 
 struct Nume {
     GLubyte litera_R[24] = {
@@ -89,7 +90,6 @@ void drawText(const char* text, float x, float y, void* font) {
 
 void myName() {
     glColor3f(1.0, 1.0, 1.0);
-
     const char* name = "BOLCA RARES";
     float x = 11.0f; 
     float y = -6.f;
@@ -343,9 +343,9 @@ void Taste(unsigned char key, int x, int y) {
 void TasteSpeciale(int key, int x, int y) {
     std::cout << "tasta " << key << std::endl;
     switch (key) {
-    case GLUT_KEY_LEFT: angleHorizontal -= 0.05;
+    case GLUT_KEY_LEFT: angle -= -0.50f;
         break;
-    case GLUT_KEY_RIGHT: angleHorizontal += 0.05;
+    case GLUT_KEY_RIGHT: angle += 0.50;
         break;
     case GLUT_KEY_UP: departareVerticala -= 0.5;
         break;
@@ -377,13 +377,8 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    /*double cameraX = radius * cos(departareVerticala) * sin(angleHorizontal);
-    double cameraY = radius * sin(departareVerticala);
-    double cameraZ = radius * cos(departareVerticala) * cos(angleHorizontal);
-
-    gluLookAt(cameraX, cameraY, cameraZ - departareZ,
-        0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0);*/
+    GLdouble camX = 30.0 * cos(angle);
+    GLdouble camZ = 30.0 * sin(angle);
     
     gluLookAt(0.0,5.0,-30.0,
         0.0,1.0,0.0,

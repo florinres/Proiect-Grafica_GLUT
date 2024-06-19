@@ -64,9 +64,6 @@
     <Library Include="GL\OPENGL32.LIB">
       <Filter>GL</Filter>
     </Library>
-    <Library Include="GL\legacy_stdio_definitions.lib">
-      <Filter>GL</Filter>
-    </Library>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="dlls\opengl32.dll">

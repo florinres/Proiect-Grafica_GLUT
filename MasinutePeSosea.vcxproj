@@ -179,7 +179,6 @@
     <Library Include="GL\GLU32.LIB" />
     <Library Include="GL\glui32.lib" />
     <Library Include="GL\glut32.lib" />
-    <Library Include="GL\legacy_stdio_definitions.lib" />
     <Library Include="GL\OPENGL32.LIB" />
   </ItemGroup>
   <ItemGroup>
