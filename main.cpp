@@ -7,7 +7,6 @@
 #include "stb_image.h"
 
 
-// Camera and movement variables
 double angleHorizontal = 0.0;
 double departareVerticala = 0.0;
 double radius = 10.0;
@@ -408,7 +407,6 @@ void display() {
     glutSwapBuffers();
 }
 
-// Main function
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
